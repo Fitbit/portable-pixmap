@@ -18,7 +18,7 @@
     "build": "rm -rf lib && tsc",
     "lint": "tslint -c tslint.json -p tsconfig.json",
     "test": "npm run lint && jest",
-    "test:coveralls": "npm run lint && jest --coverage --coverageReporters=text-lcov | coveralls",
+    "test:coveralls": "npm run test --coverage --coverageReporters=text-lcov | coveralls",
     "prepublishOnly": "npm run test && npm run build"
   },
   "dependencies": {
