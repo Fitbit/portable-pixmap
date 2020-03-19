@@ -1,6 +1,6 @@
 {
   "name": "@fitbit/portable-pixmap",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Decoder for Portable PixMap images",
   "main": "lib/PortablePixmap.js",
   "types": "lib/PortablePixmap.d.ts",
