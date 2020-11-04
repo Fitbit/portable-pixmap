@@ -45,21 +45,25 @@ export default class PortablePixmap {
     const pixels = this.width * this.height;
     const buffer = destination || new Uint8ClampedArray(pixels * 4);
 
-    if (buffer.length < pixels * 4) throw new Error('Destination array too small');
+    if (buffer.length < pixels * 4) {
+      throw new Error('Destination array too small');
+    }
 
     if (this.maxval < 256) {
       for (let i = 0; i < pixels; i += 1) {
         buffer[i * 4] = (this.data[i * 3] * 255) / this.maxval;
-        buffer[(i * 4) + 1] = (this.data[(i * 3) + 1] * 255) / this.maxval;
-        buffer[(i * 4) + 2] = (this.data[(i * 3) + 2] * 255) / this.maxval;
-        buffer[(i * 4) + 3] = 255;  // Alpha
+        buffer[i * 4 + 1] = (this.data[i * 3 + 1] * 255) / this.maxval;
+        buffer[i * 4 + 2] = (this.data[i * 3 + 2] * 255) / this.maxval;
+        buffer[i * 4 + 3] = 255; // Alpha
       }
     } else {
       for (let i = 0; i < pixels; i += 1) {
-        buffer[(i * 4)] = (this.data.readUInt16BE(i * 6) * 255) / this.maxval;
-        buffer[(i * 4) + 1] = (this.data.readUInt16BE((i * 6) + 2) * 255) / this.maxval;
-        buffer[(i * 4) + 2] = (this.data.readUInt16BE((i * 6) + 4) * 255) / this.maxval;
-        buffer[(i * 4) + 3] = 255;  // Alpha
+        buffer[i * 4] = (this.data.readUInt16BE(i * 6) * 255) / this.maxval;
+        buffer[i * 4 + 1] =
+          (this.data.readUInt16BE(i * 6 + 2) * 255) / this.maxval;
+        buffer[i * 4 + 2] =
+          (this.data.readUInt16BE(i * 6 + 4) * 255) / this.maxval;
+        buffer[i * 4 + 3] = 255; // Alpha
       }
     }
 
@@ -116,8 +120,13 @@ export default class PortablePixmap {
     }
 
     const rasterStart = lexer.maxval.lastIndex;
-    const rasterEnd = rasterStart + (width * height * 3 * (maxval > 255 ? 2 : 1));
+    const rasterEnd = rasterStart + width * height * 3 * (maxval > 255 ? 2 : 1);
     if (rasterEnd > buffer.length) throw new PPMParseError('truncated file');
-    return new this(width, height, maxval, buffer.slice(rasterStart, rasterEnd));
+    return new this(
+      width,
+      height,
+      maxval,
+      buffer.slice(rasterStart, rasterEnd),
+    );
   }
 }
